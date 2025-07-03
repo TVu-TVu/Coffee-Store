@@ -29,4 +29,10 @@
     <string name="dialog_hint_address">Enter address</string>
     <string name="dialog_button_save">Save</string>
     <string name="dialog_button_cancel">Cancel</string>
+
+    <string name="order_success_title">Order Success</string>
+    <string name="order_success_message">Your order has been placed successfully.\nFor more details, go to my orders.</string>
+    <string name="track_my_order_button">Track My Order</string>
+    <string name="content_description_order_success_icon">Order Success Icon</string>
+
 </resources>
