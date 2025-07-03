@@ -13,4 +13,5 @@
     <color name="colorBackgroundCard">#F7F8FB</color>
     <color name="colorTextPrimary">#001833</color>
     <color name="colorTextSecondary">#D8D8D8</color>"
+    <color name="colorText3">#324A59</color>
 </resources>

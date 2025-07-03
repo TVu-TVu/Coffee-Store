@@ -1,7 +1,32 @@
 <resources>
     <string name="app_name">My Coffee Shop</string>
     <string name="choose_coffee">Choose your coffee</string>
-    <string name="user_name">Anderson</string>
     <string name="loyalty">Loyalty Card</string>
     <string name="loyalty_progress">1/8</string>
+
+    <string name="profile_title">Profile</string>
+    <string name="label_full_name">Full name</string>
+    <string name="label_phone_number">Phone number</string>
+    <string name="label_email">Email</string>
+    <string name="label_address">Address</string>
+
+    <string name="guest_name">Guest</string>
+    <string name="full_name_value">Anderson</string>
+    <string name="phone_value">+60134589525</string>
+    <string name="email_value">Anderson@email.com</string>
+    <string name="address_value">3 Addersion Court\nChino Hills, HO56824, United State</string>
+
+    <string name="content_description_edit">Edit</string>
+    <string name="content_description_profile_icon">Profile Icon</string>
+    <string name="content_description_phone_icon">Phone Icon</string>
+    <string name="content_description_email_icon">Email Icon</string>
+    <string name="content_description_address_icon">Address Icon</string>
+
+    <string name="dialog_title_edit">Edit %s</string>
+    <string name="dialog_hint_full_name">Enter full name</string>
+    <string name="dialog_hint_phone_number">Enter phone number</string>
+    <string name="dialog_hint_email">Enter email</string>
+    <string name="dialog_hint_address">Enter address</string>
+    <string name="dialog_button_save">Save</string>
+    <string name="dialog_button_cancel">Cancel</string>
 </resources>
