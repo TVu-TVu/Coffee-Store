@@ -178,8 +178,7 @@
                     android:layout_marginBottom="16dp"
                     android:text="@string/choose_coffee"
                     android:textColor="@color/colorTextSecondary"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
+                    android:textSize="20sp" />
 
                 <GridLayout
                     android:layout_width="match_parent"
@@ -210,8 +209,8 @@
                             android:padding="16dp">
 
                             <ImageView
-                                android:layout_width="100dp"
-                                android:layout_height="100dp"
+                                android:layout_width="114dp"
+                                android:layout_height="85dp"
                                 android:contentDescription="Americano coffee"
                                 android:scaleType="centerCrop"
                                 android:src="@drawable/americanoimg" />
@@ -222,7 +221,7 @@
                                 android:layout_marginTop="8dp"
                                 android:text="Americano"
                                 android:textColor="@color/colorTextPrimary"
-                                android:textSize="16sp"
+                                android:textSize="16dp"
                                 android:textStyle="bold" />
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
@@ -248,8 +247,8 @@
                             android:padding="16dp">
 
                             <ImageView
-                                android:layout_width="100dp"
-                                android:layout_height="100dp"
+                                android:layout_width="102dp"
+                                android:layout_height="75dp"
                                 android:contentDescription="Cappuccino coffee"
                                 android:scaleType="centerCrop"
                                 android:src="@drawable/cappuchinoimg" />
@@ -260,7 +259,7 @@
                                 android:layout_marginTop="8dp"
                                 android:text="Cappuccino"
                                 android:textColor="@color/colorTextPrimary"
-                                android:textSize="16sp"
+                                android:textSize="16dp"
                                 android:textStyle="bold" />
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
@@ -286,8 +285,8 @@
                             android:padding="16dp">
 
                             <ImageView
-                                android:layout_width="100dp"
-                                android:layout_height="100dp"
+                                android:layout_width="104dp"
+                                android:layout_height="82dp"
                                 android:contentDescription="Mocha coffee"
                                 android:scaleType="centerCrop"
                                 android:src="@drawable/mochaimg" />
@@ -298,7 +297,7 @@
                                 android:layout_marginTop="8dp"
                                 android:text="Mocha"
                                 android:textColor="@color/colorTextPrimary"
-                                android:textSize="16sp"
+                                android:textSize="16dp"
                                 android:textStyle="bold" />
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
@@ -324,8 +323,8 @@
                             android:padding="16dp">
 
                             <ImageView
-                                android:layout_width="100dp"
-                                android:layout_height="100dp"
+                                android:layout_width="95dp"
+                                android:layout_height="75dp"
                                 android:contentDescription="Flat White coffee"
                                 android:scaleType="centerCrop"
                                 android:src="@drawable/flatwhiteimg" />
@@ -336,7 +335,7 @@
                                 android:layout_marginTop="8dp"
                                 android:text="Flat White"
                                 android:textColor="@color/colorTextPrimary"
-                                android:textSize="16sp"
+                                android:textSize="16dp"
                                 android:textStyle="bold" />
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">My Coffee Shop</string>
+    <string name="app_name">The Code Cup</string>
     <string name="choose_coffee">Choose your coffee</string>
     <string name="loyalty">Loyalty Card</string>
     <string name="loyalty_progress">1/8</string>
