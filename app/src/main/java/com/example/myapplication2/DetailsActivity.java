@@ -1,11 +1,15 @@
 package com.example.myapplication2; // Replace with your actual package name
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.view.View;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 public class DetailsActivity extends AppCompatActivity {
@@ -14,7 +18,7 @@ public class DetailsActivity extends AppCompatActivity {
     public static final String EXTRA_DRINK_IMAGE_RES_ID = "drink_image_res_id";
 
     private ImageView ivDrinkImage;
-    private TextView tvDrinkName;
+    private TextView tvDrinkNameDisplay;
     private TextView tvQuantity; // For quantity
     private TextView tvTotalAmount; // For total amount
 
@@ -22,6 +26,7 @@ public class DetailsActivity extends AppCompatActivity {
     private ImageButton btnHot, btnCold;
     private ImageButton btnSizeSmall, btnSizeMedium, btnSizeLarge;
     private ImageButton btnIceSmall, btnIceMedium, btnIceLarge;
+    private Button btnAddToCart;
 
     private int quantity = 1; // Initialize quantity
     private boolean isDoubleShot = false; // Initialize shot option
@@ -35,13 +40,17 @@ public class DetailsActivity extends AppCompatActivity {
 
     private static final double PRICE_DOUBLE_SHOT_EXTRA = 0.50;
 
+    private String originalDrinkName;
+    private int originalDrinkImageResId;
+    private CartManager cartManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
 
         ivDrinkImage = findViewById(R.id.iv_drink_image);
-        tvDrinkName = findViewById(R.id.tv_drink_name);
+        tvDrinkNameDisplay = findViewById(R.id.tv_drink_name);
         tvQuantity = findViewById(R.id.tv_quantity); // Initialize
         tvTotalAmount = findViewById(R.id.tv_total_amount); // Initialize
 
@@ -61,12 +70,28 @@ public class DetailsActivity extends AppCompatActivity {
         btnIceMedium = findViewById(R.id.btn_ice_medium);
         btnIceLarge = findViewById(R.id.btn_ice_large);
 
+        btnAddToCart = findViewById(R.id.btn_add_to_cart);
+
+        cartManager = CartManager.getInstance();
+
+        Intent intent = getIntent();
+        if (intent != null) {
+            originalDrinkName = intent.getStringExtra(EXTRA_DRINK_NAME);
+            originalDrinkImageResId = intent.getIntExtra(EXTRA_DRINK_IMAGE_RES_ID, 0); // 0 is a default value if not found
+        }
+        if (originalDrinkName != null) {
+            tvDrinkNameDisplay.setText(originalDrinkName);
+        }
+        if (originalDrinkImageResId != 0) {
+            ivDrinkImage.setImageResource(originalDrinkImageResId);
+        }
+
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             String drinkName = extras.getString(EXTRA_DRINK_NAME, "Unknown Drink");
             int drinkImageResId = extras.getInt(EXTRA_DRINK_IMAGE_RES_ID, 0); // 0 if not found
 
-            tvDrinkName.setText(drinkName);
+            tvDrinkNameDisplay.setText(drinkName);
             if (drinkImageResId != 0) {
                 ivDrinkImage.setImageResource(drinkImageResId);
             } else {
@@ -149,11 +174,86 @@ public class DetailsActivity extends AppCompatActivity {
             updateTotalAmount();
         });
 
+        btnAddToCart.setOnClickListener(v -> {
+            double unitPrice = 0.0;
+            switch (selectedSize) {
+                case "Small":
+                    unitPrice = PRICE_SMALL;
+                    break;
+                case "Medium":
+                    unitPrice = PRICE_MEDIUM;
+                    break;
+                case "Large":
+                    unitPrice = PRICE_LARGE;
+                    break;
+            }
+            if (isDoubleShot) {
+                unitPrice += PRICE_DOUBLE_SHOT_EXTRA;
+            }
+            CartItem newItem = new CartItem(originalDrinkName, originalDrinkImageResId, quantity, isDoubleShot, selectedTemperature, selectedSize, selectedIce, unitPrice);
+            cartManager.addItemToCart(newItem);
+            Toast.makeText(DetailsActivity.this, "Item added to cart", Toast.LENGTH_SHORT).show();
+
+            Intent myCartIntent = new Intent(DetailsActivity.this, MyCartActivity.class);
+            startActivity(myCartIntent);
+            finish();
+        });
+
         updateShotSelectionUI();
         updateTemperatureSelectionUI();
         updateSizeSelectionUI();
+        updateIceSelectionUI();
         updateTotalAmount();
         updateIceSelectionUI();
+    }
+
+    private double calculateCurrentUnitPrice() {
+        double unitPrice = 0.0;
+        switch (selectedSize) { // Use consistent casing
+            case "Small":
+                unitPrice = PRICE_SMALL;
+                break;
+            case "Medium":
+                unitPrice = PRICE_MEDIUM;
+                break;
+            case "Large":
+                unitPrice = PRICE_LARGE;
+                break;
+            default:
+                Log.e("DetailsActivity", "Unknown size in calculateCurrentUnitPrice: " + selectedSize);
+                // Handle default case, maybe throw an exception or set a default price
+                unitPrice = PRICE_SMALL; // Example fallback
+                break;
+        }
+        if (isDoubleShot) {
+            unitPrice += PRICE_DOUBLE_SHOT_EXTRA;
+        }
+        return unitPrice;
+    }
+
+    private void handleAddToCart() {
+        double unitPrice = calculateCurrentUnitPrice();
+
+        CartItem item = new CartItem(
+                originalDrinkName,
+                originalDrinkImageResId,
+                quantity,
+                isDoubleShot,
+                selectedTemperature,
+                selectedSize,
+                selectedIce,
+                unitPrice
+        );
+
+        CartManager.getInstance().addItemToCart(item);
+
+        Toast.makeText(this, originalDrinkName + " added to cart", Toast.LENGTH_SHORT).show();
+
+        // Navigate to MyCartActivity
+        Intent intent = new Intent(DetailsActivity.this, MyCartActivity.class);
+        startActivity(intent);
+        finish(); // Optional: finish DetailsActivity so back button from cart doesn't come here directly
+        // Or don't finish if you want users to easily come back and add another variant.
     }
 
     private void updateShotSelectionUI() {

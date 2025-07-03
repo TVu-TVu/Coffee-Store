@@ -63,6 +63,8 @@
     <string name="label_total_amount">Total Amount</string>
     <string name="button_add_to_cart">Add to cart</string>
 
-
+    <string name="cart_title">My Cart</string>
+    <string name="button_place_order">Place Order</string>
+    <string name="content_description_remove_item">Remove item from cart</string>
 
 </resources>

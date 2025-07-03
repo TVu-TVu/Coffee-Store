@@ -38,6 +38,23 @@
             android:exported="false">
         </activity>
 
+        <activity
+            android:name=".MyCartActivity"
+            android:exported="false">
+        </activity>
+
+        <activity android:name=".CartManager"
+            android:exported="false">
+        </activity>
+
+        <activity android:name=".CartAdapter"
+            android:exported="false">
+        </activity>
+
+        <activity android:name=".CartItem"
+            android:exported="false">
+        </activity>
+
     </application>
 </manifest>
 
