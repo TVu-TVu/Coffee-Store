@@ -26,13 +26,16 @@
         <activity
             android:name=".main"
             android:exported="false">
-
         </activity>
 
         <activity
             android:name=".ProfileActivity"
             android:exported="false">
+        </activity>
 
+        <activity
+            android:name=".DetailsActivity"
+            android:exported="false">
         </activity>
 
     </application>

@@ -35,4 +35,34 @@
     <string name="track_my_order_button">Track My Order</string>
     <string name="content_description_order_success_icon">Order Success Icon</string>
 
+    <string name="details_title">Details</string>
+    <string name="content_description_back_button">Back</string>
+    <string name="content_description_cart_button">Shopping Cart</string>
+    <string name="content_description_drink_image">Drink Image</string>
+    <string name="content_description_minus_button">Decrease quantity</string>
+    <string name="content_description_plus_button">Increase quantity</string>
+
+    <string name="label_shot">Shot</string>
+    <string name="option_single">Single</string>
+    <string name="option_double">Double</string>
+
+    <string name="label_select">Select</string>
+    <string name="content_description_hot_coffee">Hot Coffee</string>
+    <string name="content_description_cold_coffee">Cold Coffee</string>
+
+    <string name="label_size">Size</string>
+    <string name="content_description_small_size">Small size</string>
+    <string name="content_description_medium_size">Medium size</string>
+    <string name="content_description_large_size">Large size</string>
+
+    <string name="label_ice">Ice</string>
+    <string name="option_ice_none">None</string>
+    <string name="option_ice_less">Less</string>
+    <string name="option_ice_normal">Normal</string>
+
+    <string name="label_total_amount">Total Amount</string>
+    <string name="button_add_to_cart">Add to cart</string>
+
+
+
 </resources>

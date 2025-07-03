@@ -189,6 +189,7 @@
                     android:rowCount="2">
 
                     <androidx.cardview.widget.CardView
+                        android:id="@+id/americano_card"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_rowWeight="1"
@@ -227,6 +228,7 @@
                     </androidx.cardview.widget.CardView>
 
                     <androidx.cardview.widget.CardView
+                        android:id="@+id/cappuccino_card"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_rowWeight="1"
@@ -265,6 +267,7 @@
                     </androidx.cardview.widget.CardView>
 
                     <androidx.cardview.widget.CardView
+                        android:id="@+id/mocha_card"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_rowWeight="1"
@@ -303,6 +306,7 @@
                     </androidx.cardview.widget.CardView>
 
                     <androidx.cardview.widget.CardView
+                        android:id="@+id/flat_white_card"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_rowWeight="1"
