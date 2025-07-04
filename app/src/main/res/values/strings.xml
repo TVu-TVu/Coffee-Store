@@ -67,4 +67,23 @@
     <string name="button_place_order">Place Order</string>
     <string name="content_description_remove_item">Remove item from cart</string>
 
+
+    <string name="rewards_title">Rewards</string>
+    <string name="content_description_coffee_cup">Coffee cup progress icon</string>
+    <string name="my_point">My Points:</string>
+    <string name="points">100</string>
+    <string name="unlock_more_rewards">Unlock More Rewards</string>
+    <string name="button_redeem_now">Redeem Now</string>
+
+    <string name="history_rewards_title">History Rewards</string>
+    <string name="content_description_reward_icon">Reward Icon</string>
+
+    <string name="my_order_title">My Order</string>
+    <string name="tab_on_going">On Going</string>
+    <string name="tab_history">History</string>
+    <string name="button_track_order">Track Order</string>
+    <string name="content_description_order_status_icon">Order Status Icon</string>
+    <string name="no_on_going_orders_message">No ongoing orders found.</string>
+    <string name="no_history_orders_message">No past orders found.</string>
+
 </resources>

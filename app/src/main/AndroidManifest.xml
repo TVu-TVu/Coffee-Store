@@ -26,33 +26,36 @@
         <activity
             android:name=".main"
             android:exported="false">
+
         </activity>
 
         <activity
             android:name=".ProfileActivity"
             android:exported="false">
+
         </activity>
 
         <activity
             android:name=".DetailsActivity"
             android:exported="false">
+
         </activity>
 
         <activity
             android:name=".MyCartActivity"
             android:exported="false">
+
         </activity>
 
-        <activity android:name=".CartManager"
+        <activity
+            android:name=".MyOrderActivity"
             android:exported="false">
+
         </activity>
 
-        <activity android:name=".CartAdapter"
+        <activity android:name=".RewardsActivity"
             android:exported="false">
-        </activity>
 
-        <activity android:name=".CartItem"
-            android:exported="false">
         </activity>
 
     </application>

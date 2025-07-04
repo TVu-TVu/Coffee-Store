@@ -8,7 +8,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
 import androidx.cardview.widget.CardView;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import android.view.MenuItem;
 
 public class main extends AppCompatActivity {
 
@@ -29,6 +32,39 @@ public class main extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(main.this, ProfileActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        ImageButton buyButton = findViewById(R.id.buy_button);
+        buyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(main.this, MyCartActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        CardView loyaltyCard = findViewById(R.id.loyalty_card_section);
+        loyaltyCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(main.this, RewardsActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(MenuItem item) {
+                int itemId = item.getItemId();
+                if (itemId == R.id.navigation_gift) { // Assuming "navigation_rewards" is the ID for the gift icon in navigation.xml
+                    Intent intent = new Intent(main.this, RewardsActivity.class);
+                    startActivity(intent);
+                    return true;
+                }
+                // Handle other navigation items if they exist
+                return false;
             }
         });
 
