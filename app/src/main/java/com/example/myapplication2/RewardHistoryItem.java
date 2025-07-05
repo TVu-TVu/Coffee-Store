@@ -3,13 +3,13 @@ package com.example.myapplication2;
 public class RewardHistoryItem {
     private String title;
     private String date;
-    private String status;
+    private int pointsEarned;
     private int iconResId; // Resource ID of icon
 
-    public RewardHistoryItem(String title, String date, String status, int iconResId) {
+    public RewardHistoryItem(String title, String date, int pointsEarned, int iconResId) {
         this.title = title;
         this.date = date;
-        this.status = status;
+        this.pointsEarned = pointsEarned;
         this.iconResId = iconResId;
     }
 
@@ -21,8 +21,8 @@ public class RewardHistoryItem {
         return date;
     }
 
-    public String getStatus() {
-        return status;
+    public int getPointsEarned() {
+        return pointsEarned;
     }
 
     public int getIconResId() {

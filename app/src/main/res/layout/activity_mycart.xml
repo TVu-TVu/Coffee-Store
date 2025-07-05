@@ -27,7 +27,7 @@
             android:contentDescription="Back" />
 
         <TextView
-            android:layout_width="0dp"
+            android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="My Cart"
@@ -38,11 +38,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"/>
         <!-- Add a dummy view to balance the back button for centering the title or remove it if not needed -->
-        <View
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="invisible"
-            android:background="@drawable/arrow_back"/>
+
 
 
     </LinearLayout>

@@ -17,25 +17,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageButton
-            android:id="@+id/btn_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/content_description_back_button"
-            android:src="@drawable/arrow_back"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/colorTextPrimary" />
 
         <TextView
             android:id="@+id/tv_rewards_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
             android:text="@string/rewards_title"
             android:textColor="@color/colorTextPrimary"
-            android:textSize="20sp"
+            android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -209,7 +199,7 @@
                             android:layout_marginBottom="8dp"
                             android:text="@string/points"
                             android:textColor="@color/colorTextSecondary"
-                            android:textSize="40sp"
+                            android:textSize="28sp"
                             android:textStyle="bold" />
 
                     </LinearLayout>
@@ -217,15 +207,14 @@
 
                     <Button
                         android:id="@+id/btn_redeem_reward"
-                        android:layout_width="wrap_content"
+                        android:layout_width="100dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="50dp"
-                        android:layout_marginEnd="20dp"
+                        android:layout_marginStart="40dp"
                         android:backgroundTint="@color/teal_700"
                         android:paddingVertical="12dp"
                         android:text="@string/button_redeem_now"
                         android:textColor="@android:color/white"
-                        android:textSize="16sp"
+                        android:textSize="12sp"
                         android:textStyle="bold"
                         app:cornerRadius="8dp" />
 

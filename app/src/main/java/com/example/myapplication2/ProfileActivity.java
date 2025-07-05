@@ -50,6 +50,10 @@ public class ProfileActivity extends AppCompatActivity {
         // Tải và hiển thị thông tin người dùng khi Activity được tạo
         loadUserProfileData();
 
+        // Ánh xạ ImageButton "Back" từ layout
+        ImageButton btnBack = findViewById(R.id.btn_back);
+        btnBack.setOnClickListener(v -> onBackPressed());
+
         // Thiết lập OnClickListener cho các nút chỉnh sửa
         btnEditFullName.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -150,15 +154,15 @@ public class ProfileActivity extends AppCompatActivity {
             final OnSaveListener onSaveListener) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(String.format(getString(R.string.dialog_title_edit), fieldLabel.toLowerCase())); // "Edit full name"
+        builder.setTitle(String.format(getString(R.string.dialog_title_edit), fieldLabel.toLowerCase()));
 
         // Thiết lập EditText trong AlertDialog
         final EditText input = new EditText(this);
         input.setText(currentValue);
-        input.setHint(String.format(getString(R.string.dialog_hint_full_name), fieldLabel)); // Sử dụng hint phù hợp
+        input.setHint(String.format(getString(R.string.dialog_hint_full_name), fieldLabel));
         input.setInputType(inputType);
         if (inputType == (InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE)) {
-            input.setSingleLine(false); // Cho phép nhiều dòng cho địa chỉ
+            input.setSingleLine(false);
             input.setLines(3); // Số dòng gợi ý ban đầu
             input.setMaxLines(5); // Số dòng tối đa
             input.setVerticalScrollBarEnabled(true);

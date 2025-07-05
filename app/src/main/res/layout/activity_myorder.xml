@@ -44,14 +44,16 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+
+
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tab_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:background="@color/colorBackgroundPrimary"
-        app:tabIndicatorColor="@color/colorBackgroundCard"
-        app:tabSelectedTextColor="@color/colorBackgroundCard"
+        app:tabIndicatorColor="@color/colorTextPrimary"
+        app:tabSelectedTextColor="@color/colorTextPrimary"
         app:tabTextColor="@color/colorTextSecondary"
         app:layout_constraintTop_toBottomOf="@id/top_bar"
         app:layout_constraintStart_toStartOf="parent"
@@ -67,5 +69,21 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+<FrameLayout
+    android:id="@+id/bottom_navigation_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent">
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottom_navigation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorBackgroundCard"
+            app:itemIconTint="@color/colorBackgroundDark"
+            app:menu="@menu/navigation"/>
+</FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -33,7 +33,7 @@ public class CartManager {
     public double calculateTotalPrice() {
         double total = 0;
         for (CartItem item : cartItems) {
-            total += item.getTotalPrice();
+            total += item.getPrice();
         }
         return total;
     }

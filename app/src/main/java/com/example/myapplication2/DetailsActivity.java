@@ -1,4 +1,4 @@
-package com.example.myapplication2; // Replace with your actual package name
+package com.example.myapplication2;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +11,16 @@ import android.widget.TextView;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.gson.Gson;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 public class DetailsActivity extends AppCompatActivity {
 
@@ -19,21 +29,22 @@ public class DetailsActivity extends AppCompatActivity {
 
     private ImageView ivDrinkImage;
     private TextView tvDrinkNameDisplay;
-    private TextView tvQuantity; // For quantity
-    private TextView tvTotalAmount; // For total amount
+    private TextView tvQuantity;
+    private TextView tvTotalAmount;
 
-    private TextView tvShotSingle, tvShotDouble; // For shot options
+    private TextView tvShotSingle, tvShotDouble;
     private ImageButton btnHot, btnCold;
     private ImageButton btnSizeSmall, btnSizeMedium, btnSizeLarge;
     private ImageButton btnIceSmall, btnIceMedium, btnIceLarge;
     private Button btnAddToCart;
+    private ImageButton btnCartPreview;
 
     private int quantity = 1; // Initialize quantity
     private boolean isDoubleShot = false; // Initialize shot option
-    private String selectedTemperature = "Hot"; // Initialize temperature option
+    private String selectedTemperature = "Cold"; // Initialize temperature option
     private String selectedSize = "Small"; // Initialize size option
     private String selectedIce = "Small"; // Initialize ice option
-
+    private UserManager userManager;
     private static final double PRICE_SMALL = 2.00;
     private static final double PRICE_MEDIUM = 2.50;
     private static final double PRICE_LARGE = 3.00;
@@ -48,6 +59,8 @@ public class DetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
+
+        userManager = new UserManager(this);
 
         ivDrinkImage = findViewById(R.id.iv_drink_image);
         tvDrinkNameDisplay = findViewById(R.id.tv_drink_name);
@@ -71,7 +84,8 @@ public class DetailsActivity extends AppCompatActivity {
         btnIceLarge = findViewById(R.id.btn_ice_large);
 
         btnAddToCart = findViewById(R.id.btn_add_to_cart);
-
+        ImageButton btnback = findViewById(R.id.btn_back);
+        btnCartPreview = findViewById(R.id.btn_cart);
         cartManager = CartManager.getInstance();
 
         Intent intent = getIntent();
@@ -101,6 +115,11 @@ public class DetailsActivity extends AppCompatActivity {
         }
 
         findViewById(R.id.btn_back).setOnClickListener(v -> finish()); // Go back to previous activity
+
+        updateShotSelectionUI();
+        updateTemperatureSelectionUI();
+        updateSizeSelectionUI();
+        updateIceSelectionUI();
 
         btnMinus.setOnClickListener(v -> {
             if (quantity > 1) {
@@ -175,86 +194,87 @@ public class DetailsActivity extends AppCompatActivity {
         });
 
         btnAddToCart.setOnClickListener(v -> {
-            double unitPrice = 0.0;
-            switch (selectedSize) {
-                case "Small":
-                    unitPrice = PRICE_SMALL;
-                    break;
-                case "Medium":
-                    unitPrice = PRICE_MEDIUM;
-                    break;
-                case "Large":
-                    unitPrice = PRICE_LARGE;
-                    break;
-            }
-            if (isDoubleShot) {
-                unitPrice += PRICE_DOUBLE_SHOT_EXTRA;
-            }
-            CartItem newItem = new CartItem(originalDrinkName, originalDrinkImageResId, quantity, isDoubleShot, selectedTemperature, selectedSize, selectedIce, unitPrice);
-            cartManager.addItemToCart(newItem);
-            Toast.makeText(DetailsActivity.this, "Item added to cart", Toast.LENGTH_SHORT).show();
+            double itemPrice = calculateCurrentItemPrice();
+            int currentImageResId = extras.getInt(EXTRA_DRINK_IMAGE_RES_ID, R.drawable.group_7103); // Lấy lại imageResId
 
-            Intent myCartIntent = new Intent(DetailsActivity.this, MyCartActivity.class);
-            startActivity(myCartIntent);
-            finish();
+            CartItem newCartItem = new CartItem(
+                    tvDrinkNameDisplay.getText().toString(),
+                    itemPrice, // Price per item, before quantity
+                    quantity,
+                    selectedSize,
+                    selectedTemperature,
+                    isDoubleShot ? "Double" : "Single",
+                    selectedIce,
+                    currentImageResId
+            );
+            CartManager.getInstance().addItemToCart(newCartItem);
+            Gson gson = new Gson();
+
+            String itemJson = gson.toJson(newCartItem);
+            userManager.addRewardHistoryItem(itemJson);
+
+
+            Toast.makeText(DetailsActivity.this, "Added to cart!", Toast.LENGTH_SHORT).show();
+            // Optionally, clear selections or reset quantity after adding to cart
+            Intent intentToCart = new Intent(DetailsActivity.this, MyCartActivity.class);
+            startActivity(intentToCart);
         });
 
-        updateShotSelectionUI();
-        updateTemperatureSelectionUI();
-        updateSizeSelectionUI();
-        updateIceSelectionUI();
-        updateTotalAmount();
-        updateIceSelectionUI();
+        btnback.setOnClickListener(v -> onBackPressed());
+
+        // Handle Cart Preview button click
+        btnCartPreview.setOnClickListener(v -> showCartPreviewDialog());
     }
 
-    private double calculateCurrentUnitPrice() {
-        double unitPrice = 0.0;
-        switch (selectedSize) { // Use consistent casing
+    private double calculateCurrentItemPrice() {
+        double currentPrice = 0.0;
+        switch (selectedSize) {
             case "Small":
-                unitPrice = PRICE_SMALL;
+                currentPrice = PRICE_SMALL;
                 break;
             case "Medium":
-                unitPrice = PRICE_MEDIUM;
+                currentPrice = PRICE_MEDIUM;
                 break;
             case "Large":
-                unitPrice = PRICE_LARGE;
-                break;
-            default:
-                Log.e("DetailsActivity", "Unknown size in calculateCurrentUnitPrice: " + selectedSize);
-                // Handle default case, maybe throw an exception or set a default price
-                unitPrice = PRICE_SMALL; // Example fallback
+                currentPrice = PRICE_LARGE;
                 break;
         }
         if (isDoubleShot) {
-            unitPrice += PRICE_DOUBLE_SHOT_EXTRA;
+            currentPrice += PRICE_DOUBLE_SHOT_EXTRA;
         }
-        return unitPrice;
+        return currentPrice;
     }
 
-    private void handleAddToCart() {
-        double unitPrice = calculateCurrentUnitPrice();
+    // Phương thức để hiển thị BottomSheetDialog
+    private void showCartPreviewDialog() {
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
+        View bottomSheetView = getLayoutInflater().inflate(R.layout.dialog_cart_preview, null);
+        bottomSheetDialog.setContentView(bottomSheetView);
 
-        CartItem item = new CartItem(
-                originalDrinkName,
-                originalDrinkImageResId,
-                quantity,
-                isDoubleShot,
-                selectedTemperature,
-                selectedSize,
-                selectedIce,
-                unitPrice
-        );
+        RecyclerView rvCartItems = bottomSheetView.findViewById(R.id.rv_cart_items_preview);
+        TextView tvCartTotal = bottomSheetView.findViewById(R.id.tv_cart_preview_total);
+        Button btnGoToCart = bottomSheetView.findViewById(R.id.btn_go_to_cart);
 
-        CartManager.getInstance().addItemToCart(item);
+        List<CartItem> currentCartItems = userManager.getCartItems();
+        CartAdapter adapter = new CartAdapter(this, currentCartItems);
+        rvCartItems.setLayoutManager(new LinearLayoutManager(this));
+        rvCartItems.setAdapter(adapter);
 
-        Toast.makeText(this, originalDrinkName + " added to cart", Toast.LENGTH_SHORT).show();
+        double totalCartAmount = 0.0;
+        for (CartItem item : currentCartItems) {
+            totalCartAmount += (item.getPrice() * item.getQuantity());
+        }
+        tvCartTotal.setText(String.format("Total: $%.2f", totalCartAmount));
 
-        // Navigate to MyCartActivity
-        Intent intent = new Intent(DetailsActivity.this, MyCartActivity.class);
-        startActivity(intent);
-        finish(); // Optional: finish DetailsActivity so back button from cart doesn't come here directly
-        // Or don't finish if you want users to easily come back and add another variant.
+        btnGoToCart.setOnClickListener(v -> {
+            bottomSheetDialog.dismiss();
+            Intent intent = new Intent(DetailsActivity.this, MyCartActivity.class); // Giả sử bạn có MyCartActivity
+            startActivity(intent);
+        });
+
+        bottomSheetDialog.show();
     }
+
 
     private void updateShotSelectionUI() {
         if (isDoubleShot) {

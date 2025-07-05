@@ -48,11 +48,11 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/tv_reward_status"
+            android:id="@+id/tv_reward_points_earned"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:text="Completed"
+            android:text="+20 Points"
             android:textColor="@color/colorBackgroundDark"
             android:textSize="14sp"
             android:textStyle="bold" />

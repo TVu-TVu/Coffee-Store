@@ -1,7 +1,9 @@
 // MyOrderActivity.java
 package com.example.myapplication2; // Ensure this matches your package name
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -12,6 +14,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
@@ -21,11 +25,19 @@ public class MyOrderActivity extends AppCompatActivity {
     private ViewPager2 viewPager;
     private ImageButton btnBack;
     private TextView tvTitle;
+    BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_myorder);
+
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
+        if (bottomNavigationView != null){
+            bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+                return true;
+            });
+        }
 
         tabLayout = findViewById(R.id.tab_layout);
         viewPager = findViewById(R.id.view_pager);
@@ -50,6 +62,25 @@ public class MyOrderActivity extends AppCompatActivity {
 
         // Handle back button click
         btnBack.setOnClickListener(v -> onBackPressed());
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(MenuItem item) {
+                int itemId = item.getItemId();
+                if (itemId == R.id.navigation_gift) {
+                    Intent intent = new Intent(MyOrderActivity.this, RewardsActivity.class);
+                    startActivity(intent);
+                    return true;
+                }
+                if (itemId == R.id.navigation_shop) {
+                    Intent intent = new Intent(MyOrderActivity.this, main.class);
+                    startActivity(intent);
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
     private void setupViewPager(ViewPager2 viewPager) {

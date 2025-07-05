@@ -29,14 +29,8 @@ public class RewardHistoryAdapter extends RecyclerView.Adapter<RewardHistoryAdap
         RewardHistoryItem item = historyList.get(position);
         holder.tvTitle.setText(item.getTitle());
         holder.tvDate.setText(item.getDate());
-        holder.tvStatus.setText(item.getStatus());
+        holder.tvPointsEarned.setText(String.valueOf(item.getPointsEarned()));
         holder.ivIcon.setImageResource(item.getIconResId());
-
-        if (item.getStatus().equals("Completed")) {
-            holder.tvStatus.setTextColor(holder.itemView.getContext().getResources().getColor(R.color.colorTextPrimary));
-        } else {
-            holder.tvStatus.setTextColor(holder.itemView.getContext().getResources().getColor(R.color.colorTextSecondary));
-        }
     }
 
     @Override
@@ -48,14 +42,14 @@ public class RewardHistoryAdapter extends RecyclerView.Adapter<RewardHistoryAdap
         ImageView ivIcon;
         TextView tvTitle;
         TextView tvDate;
-        TextView tvStatus;
+        TextView tvPointsEarned;
 
         public RewardHistoryViewHolder(@NonNull View itemView) {
             super(itemView);
             ivIcon = itemView.findViewById(R.id.iv_reward_icon);
             tvTitle = itemView.findViewById(R.id.tv_reward_title);
             tvDate = itemView.findViewById(R.id.tv_reward_date);
-            tvStatus = itemView.findViewById(R.id.tv_reward_status);
+            tvPointsEarned = itemView.findViewById(R.id.tv_reward_points_earned);
         }
     }
 }

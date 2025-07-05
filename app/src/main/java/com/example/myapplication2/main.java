@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.cardview.widget.CardView;
@@ -17,6 +18,8 @@ public class main extends AppCompatActivity {
 
     private TextView tvGreetingName;
     private UserManager userManager;
+    private TextView tvLoyaltyProgress;
+    private ImageView[] cupImageViews = new ImageView[8];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +28,17 @@ public class main extends AppCompatActivity {
 
         userManager = new UserManager(this);
         tvGreetingName = findViewById(R.id.tv_greeting_name);
+        tvLoyaltyProgress = findViewById(R.id.tv_loyalty_progress);
+
+        cupImageViews[0] = findViewById(R.id.cup_1);
+        cupImageViews[1] = findViewById(R.id.cup_2);
+        cupImageViews[2] = findViewById(R.id.cup_3);
+        cupImageViews[3] = findViewById(R.id.cup_4);
+        cupImageViews[4] = findViewById(R.id.cup_5);
+        cupImageViews[5] = findViewById(R.id.cup_6);
+        cupImageViews[6] = findViewById(R.id.cup_7);
+        cupImageViews[7] = findViewById(R.id.cup_8);
+        updateLoyaltyCard(5);
 
         ImageButton profileButton = findViewById(R.id.profile_button);
         profileButton.setOnClickListener(new View.OnClickListener() {
@@ -58,12 +72,16 @@ public class main extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(MenuItem item) {
                 int itemId = item.getItemId();
-                if (itemId == R.id.navigation_gift) { // Assuming "navigation_rewards" is the ID for the gift icon in navigation.xml
+                if (itemId == R.id.navigation_gift) {
                     Intent intent = new Intent(main.this, RewardsActivity.class);
                     startActivity(intent);
                     return true;
                 }
-                // Handle other navigation items if they exist
+                if (itemId == R.id.navigation_receipt) {
+                    Intent intent = new Intent(main.this, MyOrderActivity.class);
+                    startActivity(intent);
+                    return true;
+                }
                 return false;
             }
         });
@@ -97,5 +115,17 @@ public class main extends AppCompatActivity {
         intent.putExtra(DetailsActivity.EXTRA_DRINK_NAME, drinkName);
         intent.putExtra(DetailsActivity.EXTRA_DRINK_IMAGE_RES_ID, imageResId);
         startActivity(intent);
+    }
+
+    private void updateLoyaltyCard(int currentStamps) {
+        tvLoyaltyProgress.setText(String.format("%d/8", currentStamps));
+
+        for (int i = 0; i < cupImageViews.length; i++) {
+            if (i < currentStamps) {
+                cupImageViews[i].setImageResource(R.drawable.coffee_cup_1);
+            } else {
+                cupImageViews[i].setImageResource(R.drawable.coffee_cup_2);
+            }
+        }
     }
 }

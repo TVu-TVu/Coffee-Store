@@ -1,6 +1,8 @@
 package com.example.myapplication2;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -11,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 import android.annotation.SuppressLint;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 
 public class RewardsActivity extends AppCompatActivity {
@@ -27,9 +31,8 @@ public class RewardsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rewards);
 
-        ImageButton btnBack = findViewById(R.id.btn_back);
         tvLoyaltyProgress = findViewById(R.id.tv_loyalty_progress);
-        Button btnRedeemReward = findViewById(R.id.btn_redeem_reward);
+        btnRedeemReward = findViewById(R.id.btn_redeem_reward);
         tvCurrentPoints = findViewById(R.id.tv_current_points);
 
         // Ánh xạ các ImageView của cốc
@@ -48,18 +51,36 @@ public class RewardsActivity extends AppCompatActivity {
 
         // Tạo dữ liệu giả cho lịch sử phần thưởng
         List<RewardHistoryItem> historyItems = new ArrayList<>();
-        historyItems.add(new RewardHistoryItem("Free Coffee Redeemed", "2024-06-25", "Completed", R.drawable.coffee_cup_1));
-        historyItems.add(new RewardHistoryItem("Free Pastry Voucher", "2024-06-10", "Expired", R.drawable.coffee_cup_2)); // Thay thế bằng icon thực tế
-        historyItems.add(new RewardHistoryItem("Bonus Points Earned", "2024-05-01", "Completed", R.drawable.coffee_cup_1)); // Thay thế bằng icon thực tế
+        historyItems.add(new RewardHistoryItem("Americano", "2024-06-25", 20, R.drawable.coffee_cup_1));
+        historyItems.add(new RewardHistoryItem("Capuccino", "2024-06-10", 20, R.drawable.coffee_cup_1));
+        historyItems.add(new RewardHistoryItem("Capuccino", "2024-05-01", 20, R.drawable.coffee_cup_1));
+        historyItems.add(new RewardHistoryItem("Mocha", "2024-04-25", 20, R.drawable.coffee_cup_1));
+        historyItems.add(new RewardHistoryItem("Flat White", "2024-04-22", 20, R.drawable.coffee_cup_1));
 
         rewardHistoryAdapter = new RewardHistoryAdapter(historyItems);
         rvRewardHistory.setAdapter(rewardHistoryAdapter);
 
-
-        btnBack.setOnClickListener(v -> onBackPressed());
-
         btnRedeemReward.setOnClickListener(v -> {
 
+        });
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(MenuItem item) {
+                int itemId = item.getItemId();
+                if (itemId == R.id.navigation_shop) {
+                    Intent intent = new Intent(RewardsActivity.this, main.class);
+                    startActivity(intent);
+                    return true;
+                }
+                if (itemId == R.id.navigation_receipt) {
+                    Intent intent = new Intent(RewardsActivity.this, MyOrderActivity.class);
+                    startActivity(intent);
+                    return true;
+                }
+                return false;
+            }
         });
 
 
@@ -72,22 +93,22 @@ public class RewardsActivity extends AppCompatActivity {
 
         for (int i = 0; i < cupImageViews.length; i++) {
             if (i < currentStamps) {
-                cupImageViews[i].setImageResource(R.drawable.coffee_cup_1); // Cốc đã tích lũy
+                cupImageViews[i].setImageResource(R.drawable.coffee_cup_1); 
             } else {
-                cupImageViews[i].setImageResource(R.drawable.coffee_cup_2); // Cốc chưa tích lũy
+                cupImageViews[i].setImageResource(R.drawable.coffee_cup_2);
             }
         }
 
-        if (currentStamps >= 8) {
-            btnRedeemReward.setEnabled(true);
-            btnRedeemReward.setBackgroundTintList(getResources().getColorStateList(R.color.teal_700, null)); // Sử dụng màu teal_700
-        } else {
-            btnRedeemReward.setEnabled(false);
-            btnRedeemReward.setBackgroundTintList(getResources().getColorStateList(android.R.color.darker_gray, null));
-        }
+        // if (currentStamps >= 8) {
+          //  btnRedeemReward.setEnabled(true);
+            //btnRedeemReward.setBackgroundTintList(getResources().getColorStateList(R.color.teal_700, null)); // Sử dụng màu teal_700
+        //} else {
+          //  btnRedeemReward.setEnabled(false);
+            //btnRedeemReward.setBackgroundTintList(getResources().getColorStateList(android.R.color.darker_gray, null));
+        //}
     }
 
     private void updateCurrentPoints(int points) {
-        tvCurrentPoints.setText(String.format("%d Points", points));
+        tvCurrentPoints.setText(String.format("%d", points));
     }
 }

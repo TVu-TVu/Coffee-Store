@@ -1,47 +1,56 @@
-package com.example.myapplication2;
+package com.example.myapplication2; // Thay thế bằng package name của bạn
 
-import java.io.Serializable; // To pass it via Intent
-
-public class CartItem implements Serializable { // Implement Serializable if passing via Intent
-    private String drinkName;
-    private int drinkImageResId;
+public class CartItem {
+    private String name;
+    private double price;
     private int quantity;
-    private boolean isDoubleShot;
-    private String selectedTemperature;
-    private String selectedSize;
-    private String selectedIce; // Assuming you might add ice options later
-    private double unitPrice; // Price for one unit of this specific configuration
-    private double totalPrice; // unitPrice * quantity
+    private String size;
+    private String temperature;
+    private String shot; // Single/Double
+    private String ice; // None/Less/Normal
+    private int imageResId; // Resource ID of the drink image
 
-    // Constructor
-    public CartItem(String drinkName, int drinkImageResId, int quantity,
-                    boolean isDoubleShot, String selectedTemperature, String selectedSize,
-                    String selectedIce, double unitPrice) {
-        this.drinkName = drinkName;
-        this.drinkImageResId = drinkImageResId;
+    public CartItem(String name, double price, int quantity, String size, String temperature, String shot, String ice, int imageResId) {
+        this.name = name;
+        this.price = price;
         this.quantity = quantity;
-        this.isDoubleShot = isDoubleShot;
-        this.selectedTemperature = selectedTemperature;
-        this.selectedSize = selectedSize;
-        this.selectedIce = selectedIce; // Initialize ice
-        this.unitPrice = unitPrice;
-        this.totalPrice = unitPrice * quantity;
+        this.size = size;
+        this.temperature = temperature;
+        this.shot = shot;
+        this.ice = ice;
+        this.imageResId = imageResId;
     }
 
-    // Getters for display)
-    public String getDrinkName() { return drinkName; }
-    public int getDrinkImageResId() { return drinkImageResId; }
-    public int getQuantity() { return quantity; }
-    public boolean isDoubleShot() { return isDoubleShot; }
-    public String getSelectedTemperature() { return selectedTemperature; }
-    public String getSelectedSize() { return selectedSize; }
-    public String getSelectedIce() { return selectedIce; }
-    public double getUnitPrice() { return unitPrice; }
-    public double getTotalPrice() { return totalPrice; }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-        this.totalPrice = this.unitPrice * quantity;
+    // Getters for all fields
+    public String getName() {
+        return name;
     }
 
+    public double getPrice() {
+        return price;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public String getSize() {
+        return size;
+    }
+
+    public String getTemperature() {
+        return temperature;
+    }
+
+    public String getShot() {
+        return shot;
+    }
+
+    public String getIce() {
+        return ice;
+    }
+
+    public int getImageResId() {
+        return imageResId;
+    }
 }

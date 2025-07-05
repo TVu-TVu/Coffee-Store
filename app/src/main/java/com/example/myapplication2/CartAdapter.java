@@ -4,49 +4,72 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder> {
-
-    private List<CartItem> cartItems;
+public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartItemViewHolder> {
     private Context context;
+    private List<CartItem> cartItems;
+    private CartManager cartManager;
 
     public CartAdapter(Context context, List<CartItem> cartItems) {
         this.context = context;
-        this.cartItems = cartItems;
+        this.cartItems = (cartItems != null) ? new ArrayList<>(cartItems) : new ArrayList<>();
     }
 
     @NonNull
     @Override
-    public CartViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.cart_item_layout, parent, false);
-        return new CartViewHolder(view);
+    public CartItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_cart_preview, parent, false);
+        return new CartItemViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CartViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull CartItemViewHolder holder, int position) {
         CartItem item = cartItems.get(position);
 
-        holder.tvItemName.setText(item.getDrinkName());
-        holder.ivItemImage.setImageResource(item.getDrinkImageResId()); // Ensure this drawable exists
+        if (item.getImageResId() != 0) {
+            holder.ivItemImage.setImageResource(item.getImageResId());
+            holder.ivItemImage.setVisibility(View.VISIBLE);
+        } else {
+            holder.ivItemImage.setVisibility(View.GONE);
+        }
 
-        String details = String.format(Locale.getDefault(),
-                "Size: %s, %s, %s, Ice: %s",
-                item.getSelectedSize(),
-                item.isDoubleShot() ? "Double Shot" : "Single Shot",
-                item.getSelectedTemperature(),
-                item.getSelectedIce());
-        holder.tvItemDetails.setText(details);
+        // Format drink name and options
+        String drinkNameWithOptions = item.getName();
+        StringBuilder optionsBuilder = new StringBuilder();
+        if (item.getSize() != null && !item.getSize().isEmpty()) {
+            optionsBuilder.append(item.getSize().substring(0, 1)).append(", ");
+        }
+        if (item.getTemperature() != null && !item.getTemperature().isEmpty()) {
+            optionsBuilder.append(item.getTemperature()).append(", ");
+        }
+        if (item.getShot() != null && !item.getShot().isEmpty()) {
+            optionsBuilder.append(item.getShot()).append(" Shot, ");
+        }
+        if (item.getIce() != null && !item.getIce().isEmpty()) {
+            optionsBuilder.append(item.getIce()).append(" Ice, ");
+        }
 
-        holder.tvItemUnitPrice.setText(String.format(Locale.getDefault(), "Unit Price: $%.2f", item.getUnitPrice()));
-        holder.tvItemQuantity.setText(String.format(Locale.getDefault(), "Qty: %d", item.getQuantity()));
-        holder.tvItemTotalPrice.setText(String.format(Locale.getDefault(), "$%.2f", item.getTotalPrice()));
-    }
+        if (optionsBuilder.length() > 0) {
+            optionsBuilder.setLength(optionsBuilder.length() - 2); // Remove trailing ", "
+            drinkNameWithOptions += " (" + optionsBuilder.toString() + ")";
+        }
+        holder.tvItemName.setText(drinkNameWithOptions);
+
+        holder.tvItemPriceQuantity.setText(String.format(Locale.getDefault(), "$%.2f x %d", item.getPrice(), item.getQuantity()));
+        holder.tvItemTotalPrice.setText(String.format(Locale.getDefault(), "$%.2f", item.getPrice() * item.getQuantity()));
+ }
+
+
 
     @Override
     public int getItemCount() {
@@ -54,23 +77,30 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
     }
 
     public void updateCartItems(List<CartItem> newCartItems) {
+        if (this.cartItems == null) {
+            this.cartItems = new ArrayList<>();
+        }
         this.cartItems.clear();
-        this.cartItems.addAll(newCartItems);
-        notifyDataSetChanged(); // Or use DiffUtil for better performance
+        if (newCartItems != null) {
+            this.cartItems.addAll(newCartItems);
+        }
+        notifyDataSetChanged();
     }
 
-    static class CartViewHolder extends RecyclerView.ViewHolder {
+    public static class CartItemViewHolder extends RecyclerView.ViewHolder {
         ImageView ivItemImage;
-        TextView tvItemName, tvItemDetails, tvItemUnitPrice, tvItemQuantity, tvItemTotalPrice;
+        TextView tvItemName;
+        TextView tvItemPriceQuantity;
+        TextView tvItemTotalPrice;
+        ImageButton btnRemoveItem;
 
-        public CartViewHolder(@NonNull View itemView) {
+        public CartItemViewHolder(@NonNull View itemView) {
             super(itemView);
             ivItemImage = itemView.findViewById(R.id.iv_cart_item_image);
             tvItemName = itemView.findViewById(R.id.tv_cart_item_name);
-            tvItemDetails = itemView.findViewById(R.id.tv_cart_item_details);
-            tvItemUnitPrice = itemView.findViewById(R.id.tv_cart_item_unit_price);
-            tvItemQuantity = itemView.findViewById(R.id.tv_cart_item_quantity);
+            tvItemPriceQuantity = itemView.findViewById(R.id.tv_cart_item_price_quantity);
             tvItemTotalPrice = itemView.findViewById(R.id.tv_cart_item_total_price);
+            //btnRemoveItem = itemView.findViewById(R.id.btn_remove_cart_item);
         }
     }
 }
