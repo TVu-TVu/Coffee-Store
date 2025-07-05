@@ -76,15 +76,15 @@
             android:layout_marginTop="4dp"/>
     </LinearLayout>
 
-    <!-- Optional: Add a remove button per item -->
-    <!-- <ImageButton
+
+     <ImageButton
         android:id="@+id/btn_remove_cart_item"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_remove_item"
+        android:src="@drawable/delete"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:layout_gravity="center_vertical"
         android:layout_marginStart="8dp"
-        android:contentDescription="Remove Item"/> -->
+        android:contentDescription="Remove Item"/>
 
 </LinearLayout>

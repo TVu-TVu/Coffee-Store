@@ -1,12 +1,11 @@
-// OnGoingOrdersFragment.java
-package com.example.myapplication2; // Ensure this matches your package name
+package com.example.myapplication2;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
+//import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,12 +16,21 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OnGoingOrdersFragment extends Fragment {
+public class OnGoingOrdersFragment extends Fragment implements OrderManager.OrderUpdateListener {
 
     private RecyclerView rvOnGoingOrders;
+    private OngoingOrdersAdapter adapter;
+    private OrderManager orderManager;
     private TextView tvNoOnGoingOrders;
-    private OrderAdapter orderAdapter;
-    private List<OrderItem> onGoingOrderList;
+    // private OrderAdapter orderAdapter;
+    //private List<OrderItem> onGoingOrderList;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        orderManager = OrderManager.getInstance(requireContext());
+        orderManager.addListener(this);
+    }
 
     @Nullable
     @Override
@@ -34,9 +42,58 @@ public class OnGoingOrdersFragment extends Fragment {
 
         rvOnGoingOrders.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // Sample Data for On Going Orders
-        onGoingOrderList = new ArrayList<>();
-        onGoingOrderList.add(new OrderItem(
+        adapter = new OngoingOrdersAdapter(new ArrayList<>(), order -> {
+            orderManager.cancelOrder(order.getOrderId());
+        });
+        rvOnGoingOrders.setAdapter(adapter);
+
+        loadOngoingOrders();
+        return view;
+
+    }
+
+    private void loadOngoingOrders() {
+        List<Order> ongoingOrders = orderManager.getOngoingOrders();
+        adapter.updateOrders(ongoingOrders);
+        if (orderManager == null || adapter == null || tvNoOnGoingOrders == null) return;
+
+        if (ongoingOrders.isEmpty()) {
+            tvNoOnGoingOrders.setVisibility(View.VISIBLE);
+            rvOnGoingOrders.setVisibility(View.GONE);
+        } else {
+            tvNoOnGoingOrders.setVisibility(View.GONE);
+            rvOnGoingOrders.setVisibility(View.VISIBLE);
+            adapter.updateOrders(ongoingOrders);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadOngoingOrders();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        orderManager.removeListener(this);
+    }
+
+    @Override
+    public void onOrdersUpdated() {
+        if (isAdded() && getActivity() != null) {
+            getActivity().runOnUiThread(() -> {
+                loadOngoingOrders();
+            });
+
+        }
+    }
+}
+
+
+/*
+       // onGoingOrderList = new ArrayList<>();
+        //onGoingOrderList.add(new OrderItem(
                 "Cappuccino",
                 "#5795689",
                 "04:30 PM, Today",
@@ -78,4 +135,4 @@ public class OnGoingOrdersFragment extends Fragment {
 
         return view;
     }
-}
+}*/

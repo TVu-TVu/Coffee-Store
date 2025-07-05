@@ -1,5 +1,4 @@
-// HistoryOrdersFragment.java
-package com.example.myapplication2; // Ensure this matches your package name
+package com.example.myapplication2;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -16,62 +15,68 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HistoryOrdersFragment extends Fragment {
+public class HistoryOrdersFragment extends Fragment implements OrderManager.OrderUpdateListener {
 
     private RecyclerView rvHistoryOrders;
+    private HistoryOrdersAdapter adapter;
+    private OrderManager orderManager;
     private TextView tvNoHistoryOrders;
-    private OrderAdapter orderAdapter;
-    private List<OrderItem> historyOrderList;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        orderManager = OrderManager.getInstance(requireContext());
+        orderManager.addListener(this);
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_history_orders, container, false);
+        View view = inflater.inflate(R.layout.fragment_history_orders, container, false); // Create this layout
 
         rvHistoryOrders = view.findViewById(R.id.rv_history_orders);
         tvNoHistoryOrders = view.findViewById(R.id.tv_no_history_orders);
-
         rvHistoryOrders.setLayoutManager(new LinearLayoutManager(getContext()));
+        adapter = new HistoryOrdersAdapter(new ArrayList<>());
+        rvHistoryOrders.setAdapter(adapter);
+        loadHistoryOrders();
+        return view;
+    }
 
-        // Sample Data for History Orders
-        historyOrderList = new ArrayList<>();
-        historyOrderList.add(new OrderItem(
-                "Flat White",
-                "#5795688",
-                "02:00 PM, Yesterday",
-                "1 Item",
-                "$5.00",
-                "Delivered",
-                R.drawable.resource_true,
-                false
-        ));
-        historyOrderList.add(new OrderItem(
-                "Mocha",
-                "#5795687",
-                "10:00 AM, 2 Days Ago",
-                "2 Items",
-                "$10.00",
-                "Cancelled",
-                R.drawable.resource_false, // You need to add this drawable
-                false
-        ));
-        // Add more history orders here if needed
 
-        orderAdapter = new OrderAdapter(historyOrderList);
-        rvHistoryOrders.setAdapter(orderAdapter);
+    private void loadHistoryOrders() {
+        if (orderManager == null || adapter == null || tvNoHistoryOrders == null) return;
 
-        // History orders don't have a "Track Order" button, so no click listener needed for the button itself.
-        // However, if you want to handle item clicks (e.g., to view order details), you would add it here.
-
-        // Show/hide "No past orders" message
-        if (historyOrderList.isEmpty()) {
+        List<Order> historyOrders = orderManager.getHistoryOrders();
+        if (historyOrders.isEmpty()) {
             tvNoHistoryOrders.setVisibility(View.VISIBLE);
             rvHistoryOrders.setVisibility(View.GONE);
         } else {
             tvNoHistoryOrders.setVisibility(View.GONE);
             rvHistoryOrders.setVisibility(View.VISIBLE);
+            adapter.updateOrders(historyOrders);
         }
-
-        return view;
     }
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadHistoryOrders();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (orderManager != null) {
+            orderManager.removeListener(this);
+        }
+    }
+
+    @Override
+    public void onOrdersUpdated() {
+        if (isAdded() && getActivity() != null) {
+            getActivity().runOnUiThread(this::loadHistoryOrders);
+        }
+    }
+
+
 }

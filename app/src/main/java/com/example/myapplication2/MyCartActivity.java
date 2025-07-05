@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,7 +18,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.ArrayList;
 
-public class MyCartActivity extends AppCompatActivity {
+public class MyCartActivity extends AppCompatActivity implements CartAdapter.OnCartItemClickListener {
 
     private RecyclerView rvCartItems;
     private TextView tvCartTotalAmount;
@@ -27,6 +28,7 @@ public class MyCartActivity extends AppCompatActivity {
     private CartAdapter cartAdapter;
     private CartManager yourCartManager;
     private UserManager userManager;
+    private OrderManager orderManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +37,7 @@ public class MyCartActivity extends AppCompatActivity {
 
         userManager = new UserManager(this);
         yourCartManager = CartManager.getInstance();
+        orderManager = OrderManager.getInstance(getApplicationContext());
 
         rvCartItems = findViewById(R.id.rv_cart_items);
         tvCartTotalAmount = findViewById(R.id.tv_cart_total_amount);
@@ -54,7 +57,11 @@ public class MyCartActivity extends AppCompatActivity {
 
     private void setupRecyclerView() {
         rvCartItems.setLayoutManager(new LinearLayoutManager(this));
-        cartAdapter = new CartAdapter(this, new ArrayList<>());
+        List<CartItem> initialItems = yourCartManager.getCartItems();
+        if (initialItems == null) {
+            initialItems = new ArrayList<>(); // Ensure adapter never gets a null list
+        }
+        cartAdapter = new CartAdapter(this, initialItems, this);
         rvCartItems.setAdapter(cartAdapter);
     }
 
@@ -64,17 +71,35 @@ public class MyCartActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        btnPlaceOrder.setOnClickListener(v -> {
-            List<CartItem> currentItems = yourCartManager.getCartItems();
-            if (currentItems == null || currentItems.isEmpty()) {
-                Toast.makeText(MyCartActivity.this, "Your cart is empty!", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            Toast.makeText(this, "Order placed successfully!", Toast.LENGTH_SHORT).show();
-            yourCartManager.clearCart();
-            Intent intent = new Intent(this, OrderSuccessActivity.class);
-            startActivity(intent);
-        });
+        if (btnPlaceOrder != null) {
+            btnPlaceOrder.setOnClickListener(v -> {
+                List<CartItem> currentCartItems = yourCartManager.getCartItems(); // Assuming this returns a copy or new list
+                if (currentCartItems == null || currentCartItems.isEmpty()) {
+                    Toast.makeText(MyCartActivity.this, "Your cart is empty!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                double totalPrice = yourCartManager.calculateTotalPrice(); // Get total price
+
+                // 1. Create a new order and pass it to OrderManager
+                // Pass a *copy* of currentCartItems if CartManager modifies the original list upon clearing
+                orderManager.placeNewOrder(new ArrayList<>(currentCartItems), totalPrice);
+
+                Toast.makeText(MyCartActivity.this, "Order placed successfully!", Toast.LENGTH_SHORT).show();
+
+                // 2. Clear the cart in CartManager
+                yourCartManager.clearCart();
+
+                // 3. Update the UI in MyCartActivity (show empty cart)
+                loadCartItemsAndUpdateUI();
+
+                // 4. Navigate to OrderSuccessActivity (or directly to MyOrderActivity)
+                Intent intent = new Intent(MyCartActivity.this, OrderSuccessActivity.class);
+                startActivity(intent);
+
+                finish(); // Finish MyCartActivity
+            });
+        }
     }
 
     private void loadCartItemsAndUpdateUI() {
@@ -99,7 +124,18 @@ public class MyCartActivity extends AppCompatActivity {
         double total = yourCartManager.calculateTotalPrice();
         tvCartTotalAmount.setText(String.format(Locale.getDefault(), "$%.2f", total));
     }
+
+    @Override
+    public void onRemoveItemClick(int position, CartItem item) {
+
+        yourCartManager.removeItemByInstance(item);
+
+        loadCartItemsAndUpdateUI();
+
+        Toast.makeText(this, item.getName() + " removed from cart", Toast.LENGTH_SHORT).show();
+    }
 }
+
 
 
 

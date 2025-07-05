@@ -21,6 +21,22 @@ public class CartManager {
     public void addItemToCart(CartItem item) {
         cartItems.add(item);
     }
+    public void removeItemByInstance(CartItem item) {
+        boolean removed = cartItems.remove(item);
+        if (!removed) {
+            for (int i = 0; i < cartItems.size(); i++) {
+                CartItem currentItem = cartItems.get(i);
+                // Define what makes an item "equal" for removal purposes
+                if (currentItem.getName().equals(item.getName()) &&
+                        currentItem.getPrice() == item.getPrice() && // Add other relevant properties
+                        currentItem.getSize().equals(item.getSize())) { // Example
+                    cartItems.remove(i);
+                    removed = true;
+                    break;
+                }
+            }
+        }
+    }
 
     public List<CartItem> getCartItems() {
         return new ArrayList<>(cartItems); // Return a copy to prevent external modification
@@ -33,7 +49,7 @@ public class CartManager {
     public double calculateTotalPrice() {
         double total = 0;
         for (CartItem item : cartItems) {
-            total += item.getPrice();
+            total += item.getPrice()*item.getQuantity();
         }
         return total;
     }

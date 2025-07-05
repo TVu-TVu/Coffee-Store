@@ -1,5 +1,4 @@
-// MyOrderActivity.java
-package com.example.myapplication2; // Ensure this matches your package name
+package com.example.myapplication2;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,7 +22,7 @@ public class MyOrderActivity extends AppCompatActivity {
 
     private TabLayout tabLayout;
     private ViewPager2 viewPager;
-    private ImageButton btnBack;
+
     private TextView tvTitle;
     BottomNavigationView bottomNavigationView;
 
@@ -41,7 +40,6 @@ public class MyOrderActivity extends AppCompatActivity {
 
         tabLayout = findViewById(R.id.tab_layout);
         viewPager = findViewById(R.id.view_pager);
-        btnBack = findViewById(R.id.btn_back);
         tvTitle = findViewById(R.id.tv_my_order_title);
 
         // Set title text (optional, if not set directly in XML string)
@@ -60,8 +58,6 @@ public class MyOrderActivity extends AppCompatActivity {
                     }
                 }).attach();
 
-        // Handle back button click
-        btnBack.setOnClickListener(v -> onBackPressed());
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {

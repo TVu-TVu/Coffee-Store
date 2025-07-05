@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardUseCompatPadding="true"
+    app:cardElevation="4dp"
+    app:cardCornerRadius="8dp"
+    android:layout_margin="8dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/tv_ongoing_order_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:text="Order ID: #12345"/>
+
+                <TextView
+                    android:id="@+id/tv_ongoing_order_timestamp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:text="Placed: Jan 01, 2023 10:00 AM"/>
+
+            </LinearLayout>
+            <TextView
+                android:id="@+id/tv_ongoing_order_total"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_marginStart="20dp"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:text="$25.00"/>
+
+        </LinearLayout>
+        <TextView
+            android:id="@+id/tv_ongoing_order_items"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textSize="14sp"
+            android:text="Item 1 (Qty: 2)\nItem 2 (Qty: 1)"/>
+
+        <TextView
+            android:id="@+id/tv_ongoing_order_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textSize="16sp"
+            android:textStyle="italic"
+            android:textColor="@android:color/holo_blue_dark"
+            android:text="Status: Preparing"/>
+
+        <Button
+            android:id="@+id/btn_cancel_order"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="12dp"
+            android:text="Cancel Order"
+            style="@style/Widget.MaterialComponents.Button.TextButton"/>
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

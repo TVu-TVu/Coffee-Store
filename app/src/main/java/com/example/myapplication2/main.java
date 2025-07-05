@@ -11,13 +11,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.cardview.widget.CardView;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import android.view.MenuItem;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
 public class main extends AppCompatActivity {
 
-    private TextView tvGreetingName;
     private UserManager userManager;
+    private TextView tvGreetingName;
     private TextView tvLoyaltyProgress;
     private ImageView[] cupImageViews = new ImageView[8];
 
@@ -38,7 +45,7 @@ public class main extends AppCompatActivity {
         cupImageViews[5] = findViewById(R.id.cup_6);
         cupImageViews[6] = findViewById(R.id.cup_7);
         cupImageViews[7] = findViewById(R.id.cup_8);
-        updateLoyaltyCard(5);
+        updateLoyaltyCard(userManager.getStamps());
 
         ImageButton profileButton = findViewById(R.id.profile_button);
         profileButton.setOnClickListener(new View.OnClickListener() {
@@ -102,6 +109,7 @@ public class main extends AppCompatActivity {
         super.onResume();
         // Load and display the user name every time the activity resumes
         loadAndDisplayUserName(); // Add this call
+        updateLoyaltyCard(userManager.getStamps());
     }
 
     private void loadAndDisplayUserName() {

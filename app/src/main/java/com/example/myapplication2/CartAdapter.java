@@ -18,7 +18,17 @@ import java.util.Locale;
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartItemViewHolder> {
     private Context context;
     private List<CartItem> cartItems;
-    private CartManager cartManager;
+
+    public interface OnCartItemClickListener {
+        void onRemoveItemClick(int position, CartItem item);
+    }
+    private OnCartItemClickListener listener;
+
+    public CartAdapter(Context context, List<CartItem> cartItems, OnCartItemClickListener listener) {
+        this.context = context;
+        this.cartItems = (cartItems != null) ? new ArrayList<>(cartItems) : new ArrayList<>();
+        this.listener = listener; // Set the listener
+    }
 
     public CartAdapter(Context context, List<CartItem> cartItems) {
         this.context = context;
@@ -67,7 +77,16 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartItemViewHo
 
         holder.tvItemPriceQuantity.setText(String.format(Locale.getDefault(), "$%.2f x %d", item.getPrice(), item.getQuantity()));
         holder.tvItemTotalPrice.setText(String.format(Locale.getDefault(), "$%.2f", item.getPrice() * item.getQuantity()));
- }
+
+        if (holder.btnRemoveItem != null && listener != null) {
+            holder.btnRemoveItem.setOnClickListener(v -> {
+                int currentPosition = holder.getAdapterPosition(); // Use getAdapterPosition() for safety
+                if (currentPosition != RecyclerView.NO_POSITION) {
+                    listener.onRemoveItemClick(currentPosition, cartItems.get(currentPosition));
+                }
+            });
+        }
+    }
 
 
 
@@ -100,7 +119,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartItemViewHo
             tvItemName = itemView.findViewById(R.id.tv_cart_item_name);
             tvItemPriceQuantity = itemView.findViewById(R.id.tv_cart_item_price_quantity);
             tvItemTotalPrice = itemView.findViewById(R.id.tv_cart_item_total_price);
-            //btnRemoveItem = itemView.findViewById(R.id.btn_remove_cart_item);
+            btnRemoveItem = itemView.findViewById(R.id.btn_remove_cart_item);
         }
     }
 }

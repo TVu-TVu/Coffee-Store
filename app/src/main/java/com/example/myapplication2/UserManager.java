@@ -1,14 +1,18 @@
 package com.example.myapplication2;
 
 import android.content.Context;
+import android.util.Log;
 import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class UserManager {
 
@@ -20,6 +24,7 @@ public class UserManager {
     private static final String KEY_POINTS = "points";
     private static final String KEY_REWARDS_HISTORY = "rewards_history";
     private static final String KEY_CART_ITEMS = "cart_items";
+    private static final String KEY_STAMPS = "user_stamps";
     private final SharedPreferences sharedPrefs;
     private final Context context;
     private final Gson gson;
@@ -63,18 +68,73 @@ public class UserManager {
     }
 
     public int getPoints() {
-        return sharedPrefs.getInt(KEY_POINTS, 0);
+        return sharedPrefs.getInt(KEY_POINTS, 1490);
     }
 
     public void addPoints(int pointsToAdd) {
         int currentPoints = getPoints();
         sharedPrefs.edit().putInt(KEY_POINTS, currentPoints + pointsToAdd).apply();
+        Log.d("UserManager", "Added " + pointsToAdd + " points.");
+    }
+    public void subtractPoints(int pointsToSubtract) {
+        int currentPoints = getPoints();
+        sharedPrefs.edit().putInt(KEY_POINTS, currentPoints - pointsToSubtract).apply();
     }
 
-    public String getRewardsHistory() {
-        return sharedPrefs.getString(KEY_REWARDS_HISTORY, "[]");
+    public int getStamps() {
+        return sharedPrefs.getInt(KEY_STAMPS, 0); // Default to 0 stamps
     }
 
+    public void addStamp() {
+        int currentStamps = getStamps();
+
+        if (currentStamps < 8)
+            currentStamps++;
+        SharedPreferences.Editor editor = sharedPrefs.edit();
+        editor.putInt(KEY_STAMPS, currentStamps);
+        editor.apply();
+    }
+
+
+
+    public void redeemStampsReward() {
+        // Assuming a full card (8 stamps) is needed to redeem
+        if (getStamps() >= 8) {
+
+            sharedPrefs.edit().putInt(KEY_STAMPS, 0).apply();
+            Log.d("UserManager", "Stamps reward redeemed. Stamps reset to 0.");
+        }
+    }
+
+
+    public List<RewardHistoryItem> getRewardHistory() {
+        String jsonHistory = sharedPrefs.getString(KEY_REWARDS_HISTORY, null);
+        if (jsonHistory == null) {
+            return new ArrayList<>(); // Return empty list if no history
+        }
+        Type type = new TypeToken<ArrayList<RewardHistoryItem>>() {}.getType();
+        List<RewardHistoryItem> historyItems = gson.fromJson(jsonHistory, type);
+        return historyItems == null ? new ArrayList<>() : historyItems; // Ensure non-null return
+    }
+
+    public void addRewardHistoryItem(RewardHistoryItem newItem) {
+        if (newItem == null) return;
+        List<RewardHistoryItem> historyItems = getRewardHistory();
+        historyItems.add(0, newItem); // Add to the beginning to show newest first
+        String jsonHistory = gson.toJson(historyItems);
+        sharedPrefs.edit().putString(KEY_REWARDS_HISTORY, jsonHistory).apply();
+    }
+
+    public void addRewardHistoryItems(List<RewardHistoryItem> newItems) {
+        if (newItems == null || newItems.isEmpty()) {
+            return;
+        }
+        List<RewardHistoryItem> historyItems = getRewardHistory();
+        historyItems.addAll(0, newItems); // Add all new items to the beginning
+        String jsonHistory = gson.toJson(historyItems);
+        sharedPrefs.edit().putString(KEY_REWARDS_HISTORY, jsonHistory).apply();
+    }
+/*
     public void addRewardHistoryItem(String itemJson) {
         String currentHistory = getRewardsHistory();
         if (currentHistory.equals("[]")) {
@@ -84,12 +144,11 @@ public class UserManager {
             String newHistory = currentHistory.substring(0, currentHistory.length() - 1) + "," + itemJson + "]";
             sharedPrefs.edit().putString(KEY_REWARDS_HISTORY, newHistory).apply();
         }
-        //public void subtractPoints(int pointsToSubtract) {
-        //  int currentPoints = getPoints();
-        //if (currentPoints >= pointsToSubtract) {
-        //  sharedPrefs.edit().putInt(KEY_POINTS, currentPoints - pointsToSubtract).apply();
-        //}
-        //}
+    }*/
+
+    public static String getCurrentDateString() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        return sdf.format(new Date());
     }
 
     public void addCartItem(CartItem item) {

@@ -37,6 +37,7 @@ public class DetailsActivity extends AppCompatActivity {
     private ImageButton btnSizeSmall, btnSizeMedium, btnSizeLarge;
     private ImageButton btnIceSmall, btnIceMedium, btnIceLarge;
     private Button btnAddToCart;
+    private ImageButton btnback;
     private ImageButton btnCartPreview;
 
     private int quantity = 1; // Initialize quantity
@@ -84,7 +85,7 @@ public class DetailsActivity extends AppCompatActivity {
         btnIceLarge = findViewById(R.id.btn_ice_large);
 
         btnAddToCart = findViewById(R.id.btn_add_to_cart);
-        ImageButton btnback = findViewById(R.id.btn_back);
+        btnback = findViewById(R.id.btn_back);
         btnCartPreview = findViewById(R.id.btn_cart);
         cartManager = CartManager.getInstance();
 
@@ -211,7 +212,8 @@ public class DetailsActivity extends AppCompatActivity {
             Gson gson = new Gson();
 
             String itemJson = gson.toJson(newCartItem);
-            userManager.addRewardHistoryItem(itemJson);
+            RewardHistoryItem rewardHistoryItem = gson.fromJson(itemJson, RewardHistoryItem.class);
+            userManager.addRewardHistoryItem(rewardHistoryItem);
 
 
             Toast.makeText(DetailsActivity.this, "Added to cart!", Toast.LENGTH_SHORT).show();
@@ -220,7 +222,10 @@ public class DetailsActivity extends AppCompatActivity {
             startActivity(intentToCart);
         });
 
-        btnback.setOnClickListener(v -> onBackPressed());
+        btnback.setOnClickListener(v -> {
+            Intent intent2 = new Intent(DetailsActivity.this, main.class);
+            startActivity(intent2);
+        });
 
         // Handle Cart Preview button click
         btnCartPreview.setOnClickListener(v -> showCartPreviewDialog());
@@ -255,7 +260,8 @@ public class DetailsActivity extends AppCompatActivity {
         TextView tvCartTotal = bottomSheetView.findViewById(R.id.tv_cart_preview_total);
         Button btnGoToCart = bottomSheetView.findViewById(R.id.btn_go_to_cart);
 
-        List<CartItem> currentCartItems = userManager.getCartItems();
+        List<CartItem> currentCartItems = cartManager.getInstance().getCartItems();
+
         CartAdapter adapter = new CartAdapter(this, currentCartItems);
         rvCartItems.setLayoutManager(new LinearLayoutManager(this));
         rvCartItems.setAdapter(adapter);
